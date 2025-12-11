@@ -1,44 +1,40 @@
-// src/app/_components/create-post-form.tsx
-
-"use client"; // REQUIRED: Uses client-side hooks (useState, useMutation)
+"use client";
 
 import { useState } from "react";
 import { api } from "~/trpc/react";
 
+function isError(error: unknown): error is Error {
+  return error instanceof Error; 
+}
+
 export function CreatePostForm() {
-  // State for the form input
   const [name, setName] = useState("");
   
-  // Get the tRPC client context utility
   const utils = api.useUtils(); 
   
-  // Use the mutation hook for the 'create' procedure
   const { mutate, isLoading } = api.post.create.useMutation({
-    // onSuccess callback is executed when the post is successfully created on the backend
     onSuccess: async () => {
-      // 1. Reset the input field
       setName("");
-      
-      // 2. Invalidate the cache for 'getLatest'. 
-      // This tells tRPC/React Query to refetch the latest post data immediately, 
-      // so the user sees the new post without a page refresh.
       await utils.post.getLatest.invalidate();
     },
     onError: (error) => {
-      // Handle server-side errors (e.g., Zod validation error or database failure)
+      let errorMessage = "An unknown error occurred.";
+      
+      if (isError(error)) {
+        errorMessage = error.message;
+      } else if (typeof error === 'object' && error !== null && 'message' in error && typeof error.message === 'string') {
+        errorMessage = error.message; 
+      }
+      
       console.error("Post creation failed:", error);
-      alert(`Error: ${error.message}. Check console for details.`);
+      alert(`Error: ${errorMessage}. Check console for details.`);
     },
   });
 
-  // Handler for form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return; // Simple validation check
+    if (!name.trim()) return;
     
-    // Call the tRPC mutation
-    // NOTE: This procedure is secured by 'protectedProcedure' on the server.
-    // The user's ID is automatically accessed via ctx.session.user.id on the backend.
     mutate({ name });
   };
 
