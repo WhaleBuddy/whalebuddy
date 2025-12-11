@@ -1,6 +1,6 @@
 # 📚 Guias de Desenvolvimento - WhaleBuddy
 
-> **Bem-vindo ao WhaleBuddy!** Esta pasta contém todos os guias necessários para você começar a desenvolver no projeto.
+> **Bem-vindo ao WhaleBuddy!** Este README contém todos os guias necessários para você começar a desenvolver no projeto.
 
 ---
 
@@ -8,23 +8,23 @@
 
 ### Se você é novo no projeto:
 
-1. **[🚀 Guia de Desenvolvimento](./development.md)** - Setup inicial e comandos
-2. **[📁 Estrutura de Pastas](./folder-structure.md)** - Entenda onde cada coisa fica
-3. **[⭐ Guia de Git](./git.md)** - Como usar Git e GitHub no projeto
-4. **[💻 Padrões de Código](./coding-standards.md)** - Como escrever código consistente
-5. **[🔄 Workflow](./workflow.md)** - Passo a passo completo de uma feature
-6. **[🔧 Troubleshooting](./troubleshooting.md)** - Soluções para problemas comuns
+1. **[🚀 Guia de Desenvolvimento](./.guides/development.md)** - Setup inicial e comandos
+2. **[📁 Estrutura de Pastas](./.guides/folder-structure.md)** - Entenda onde cada coisa fica
+3. **[⭐ Guia de Git](./.guides/git.md)** - Como usar Git e GitHub no projeto
+4. **[💻 Padrões de Código](./.guides/coding-standards.md)** - Como escrever código consistente
+5. **[🔄 Workflow](./.guides/workflow.md)** - Passo a passo completo de uma feature
+6. **[🔧 Troubleshooting](./.guides/troubleshooting.md)** - Soluções para problemas comuns
 
 ### 📋 Referência Rápida:
 
-- **[📋 Cheat Sheet](./cheat-sheet.md)** - Cola rápida com comandos e templates (mantenha aberto!)
-- **[🏗️ Arquitetura](./architecture.md)** - Como tudo se conecta (para entender o big picture)
+- **[📋 Cheat Sheet](./.guides/cheat-sheet.md)** - Cola rápida com comandos e templates (mantenha aberto!)
+- **[🏗️ Arquitetura](./.guides/architecture.md)** - Como tudo se conecta (para entender o big picture)
 
 ---
 
 ## 📖 Guias Disponíveis
 
-### 🚀 [Guia de Desenvolvimento](./development.md)
+### 🚀 [Guia de Desenvolvimento](./.guides/development.md)
 
 **O que você vai aprender:**
 
@@ -37,7 +37,7 @@
 
 ---
 
-### 📁 [Estrutura de Pastas](./folder-structure.md)
+### 📁 [Estrutura de Pastas](./.guides/folder-structure.md)
 
 **O que você vai aprender:**
 
@@ -50,7 +50,7 @@
 
 ---
 
-### ⭐ [Guia de Git & GitHub](./git.md)
+### ⭐ [Guia de Git & GitHub](./.guides/git.md)
 
 **O que você vai aprender:**
 
@@ -64,7 +64,7 @@
 
 ---
 
-### 💻 [Padrões de Código](./coding-standards.md)
+### 💻 [Padrões de Código](./.guides/coding-standards.md)
 
 **O que você vai aprender:**
 
@@ -79,7 +79,7 @@
 
 ---
 
-### 🔄 [Workflow de Trabalho](./workflow.md)
+### 🔄 [Workflow de Trabalho](./.guides/workflow.md)
 
 **O que você vai aprender:**
 
@@ -93,7 +93,7 @@
 
 ---
 
-### 🔧 [Troubleshooting](./troubleshooting.md)
+### 🔧 [Troubleshooting](./.guides/troubleshooting.md)
 
 **O que você vai aprender:**
 
@@ -110,21 +110,21 @@
 
 ### Dia 1: Setup e Familiarização
 
-1. Leia o [Guia de Desenvolvimento](./development.md)
+1. Leia o [Guia de Desenvolvimento](./.guides/development.md)
 2. Faça o setup inicial do projeto
 3. Rode o projeto localmente
-4. Explore a [Estrutura de Pastas](./folder-structure.md)
+4. Explore a [Estrutura de Pastas](./.guides/folder-structure.md)
 
 ### Dia 2: Git e Workflow
 
-1. Leia o [Guia de Git](./git.md)
+1. Leia o [Guia de Git](./.guides/git.md)
 2. Pratique criando uma branch de teste
-3. Leia o [Workflow](./workflow.md)
+3. Leia o [Workflow](./.guides/workflow.md)
 4. Entenda o processo completo
 
 ### Dia 3: Código e Padrões
 
-1. Leia os [Padrões de Código](./coding-standards.md)
+1. Leia os [Padrões de Código](./.guides/coding-standards.md)
 2. Explore o código existente
 3. Identifique os padrões usados
 4. Faça sua primeira contribuição pequena
@@ -132,7 +132,7 @@
 ### Dia 4+: Desenvolvimento
 
 1. Pegue uma task real
-2. Siga o [Workflow](./workflow.md)
+2. Siga o [Workflow](./.guides/workflow.md)
 3. Consulte os guias quando necessário
 4. Peça ajuda quando travar!
 
@@ -187,7 +187,7 @@
 Encontrou algo confuso ou desatualizado? Ajude a melhorar!
 
 1. Crie uma branch: `git checkout -b WB-XXX/update-guides`
-2. Edite o guia em `.guides/`
+2. Edite o guia em `.guides/` (pasta na raiz do projeto)
 3. Faça commit: `git commit -m "docs(WB-XXX): update guide"`
 4. Crie uma PR
 
