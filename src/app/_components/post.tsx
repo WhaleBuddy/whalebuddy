@@ -1,50 +1,43 @@
-"use client";
+// src/app/_components/post.tsx
 
-import { useState } from "react";
+"use client"; // REQUIRED: This component uses client-side hooks like useQuery
 
 import { api } from "~/trpc/react";
 
 export function LatestPost() {
-  const [latestPost] = api.post.getLatest.useSuspenseQuery();
+  // Use the useQuery hook to fetch the latest post for the current authenticated user.
+  const { data: latestPost, isLoading, isError } = api.post.getLatest.useQuery();
 
-  const utils = api.useUtils();
-  const [name, setName] = useState("");
-  const createPost = api.post.create.useMutation({
-    onSuccess: async () => {
-      await utils.post.invalidate();
-      setName("");
-    },
-  });
+  if (isLoading) {
+    return <p className="text-white">Loading your latest post...</p>;
+  }
 
+  if (isError) {
+    return <p className="text-red-400">Error fetching your post data.</p>;
+  }
+
+  // Display logic based on the user's fetched data
   return (
-    <div className="w-full max-w-xs">
+    <div className="w-full max-w-2xl mt-8 rounded-lg bg-white/10 p-6">
+      <h3 className="text-xl font-semibold text-white mb-2">Your Latest Post</h3>
+      
       {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
+        // Data found: show the post name and date
+        <div>
+          <p className="text-lg text-white">Name: {latestPost.name}</p>
+          <p className="text-sm text-gray-300">
+            Created at: {latestPost.createdAt.toLocaleTimeString()}
+          </p>
+        </div>
       ) : (
-        <p>You have no posts yet.</p>
+        // No data found: prompt the user to create one
+        <p className="text-gray-400">
+          You haven't created any posts yet. Time to create one!
+        </p>
       )}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          createPost.mutate({ name });
-        }}
-        className="flex flex-col gap-2"
-      >
-        <input
-          type="text"
-          placeholder="Title"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-full bg-white/10 px-4 py-2 text-white"
-        />
-        <button
-          type="submit"
-          className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
-          disabled={createPost.isPending}
-        >
-          {createPost.isPending ? "Submitting..." : "Submit"}
-        </button>
-      </form>
     </div>
   );
 }
+
+// NOTE: You must also ensure your CreatePost component is available, 
+// but for now, we focus on fetching the data.
