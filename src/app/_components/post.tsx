@@ -16,9 +16,11 @@ export function LatestPost() {
   }
 
   return (
-    <div className="w-full max-w-2xl mt-8 rounded-lg bg-white/10 p-6">
-      <h3 className="text-xl font-semibold text-white mb-2">Your Latest Post</h3>
-      
+    <div className="mt-8 w-full max-w-2xl rounded-lg bg-white/10 p-6">
+      <h3 className="mb-2 text-xl font-semibold text-white">
+        Your Latest Post
+      </h3>
+
       {latestPost ? (
         <div>
           <p className="text-lg text-white">Name: {latestPost.name}</p>

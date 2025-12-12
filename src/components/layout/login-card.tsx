@@ -33,7 +33,7 @@ export const LoginCard = () => {
       <h2 className="mb-6 text-3xl font-semibold text-white">
         Welcome to WhaleBuddy
       </h2>
-      
+
       {/* ERROR DISPLAY AREA */}
       {authError && (
         <div className="mb-4 w-full rounded-md border border-red-500 bg-red-100 p-3 text-sm text-red-800">
@@ -41,7 +41,7 @@ export const LoginCard = () => {
           <p>{getErrorMessage(authError)}</p>
         </div>
       )}
-      
+
       {/* RENDER THE GOOGLE SIGN-IN BUTTON */}
       <div className="w-full">
         <GoogleSignInButton />
