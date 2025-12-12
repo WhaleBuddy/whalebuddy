@@ -1,7 +1,9 @@
+// src/app/page.tsx (CORRECTED - Removed unused imports)
+
 import Link from "next/link";
 import { redirect } from "next/navigation"; 
-import { LatestPost } from "~/app/_components/post";
-import { AuthShowcaseWithGoogle } from "~/app/_components/auth-showcase-google";
+// REMOVED: LatestPost import
+// REMOVED: AuthShowcaseWithGoogle import
 import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server"; 
 import { LoginCard } from "~/components/layout/login-card";

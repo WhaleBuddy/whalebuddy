@@ -21,7 +21,6 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-     
     } & DefaultSession["user"];
   }
 
@@ -40,7 +39,6 @@ export const authConfig = {
   providers: [
     DiscordProvider,
     GoogleProvider({
-
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),

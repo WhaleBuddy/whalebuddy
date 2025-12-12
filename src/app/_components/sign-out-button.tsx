@@ -10,7 +10,7 @@ export const SignOutButton = () => {
     // We pass an object to specify where the user should be redirected after logout.
     // CHANGED: callbackUrl is set to '/' to redirect the user back to the main page,
     // which will then show the LoginCard due to the conditional check in src/app/page.tsx.
-    void signOut({ callbackUrl: "/" }); 
+    void signOut({ callbackUrl: "/" });
   };
 
   return (
