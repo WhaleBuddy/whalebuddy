@@ -1,16 +1,11 @@
-// src/components/layout/login-card.tsx (FINAL CORRECTION)
+"use client";
 
-"use client"; // This component needs to be client-side to use client-side hooks
-
-import * as React from "react";
 import { useSearchParams } from "next/navigation";
-// CRITICAL FIX: The file is one directory up, so we use '../'.
-// The path is corrected from './google-sign-in-button' to '../GoogleSignInButton'.
-import { GoogleSignInButton } from "../GoogleSignInButton";
+import { GoogleSignInButton } from "./GoogleSignInButton";
 
 export const LoginCard = () => {
   const searchParams = useSearchParams();
-  const authError = searchParams.get("error"); // Function to map NextAuth error codes to user-friendly messages
+  const authError = searchParams.get("error");
 
   const getErrorMessage = (error: string) => {
     switch (error) {
@@ -34,7 +29,6 @@ export const LoginCard = () => {
         Welcome to WhaleBuddy
       </h2>
 
-      {/* ERROR DISPLAY AREA */}
       {authError && (
         <div className="mb-4 w-full rounded-md border border-red-500 bg-red-100 p-3 text-sm text-red-800">
           <p className="font-medium">Sign-in Error:</p>
@@ -42,7 +36,6 @@ export const LoginCard = () => {
         </div>
       )}
 
-      {/* RENDER THE GOOGLE SIGN-IN BUTTON */}
       <div className="w-full">
         <GoogleSignInButton />
       </div>
