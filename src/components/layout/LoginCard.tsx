@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
-import { GoogleSignInButton } from "../GoogleSignInButton";
+import { GoogleSignInButton } from "~/app/_components/GoogleSignInButton";
 
 export const LoginCard = () => {
   const searchParams = useSearchParams();
