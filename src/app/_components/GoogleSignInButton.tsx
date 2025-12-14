@@ -16,7 +16,6 @@ export const GoogleSignInButton = () => {
       setIsLoading(false);
       console.error("Error initiating Google sign-in:", error);
     }
-
   };
 
   return (

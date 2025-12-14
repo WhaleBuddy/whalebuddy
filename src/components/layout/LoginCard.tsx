@@ -29,14 +29,14 @@ export const LoginCard = () => {
       <h2 className="mb-6 text-3xl font-semibold text-white">
         Welcome to WhaleBuddy
       </h2>
-      
+
       {authError && (
         <div className="mb-4 w-full rounded-md border border-red-500 bg-red-100 p-3 text-sm text-red-800">
           <p className="font-medium">Sign-in Error:</p>
           <p>{getErrorMessage(authError)}</p>
         </div>
       )}
-      
+
       <div className="w-full">
         <GoogleSignInButton />
       </div>

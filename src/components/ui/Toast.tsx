@@ -11,7 +11,12 @@ interface ToastProps {
   duration?: number;
 }
 
-export const Toast = ({ message, type, onClose, duration = 5000 }: ToastProps) => {
+export const Toast = ({
+  message,
+  type,
+  onClose,
+  duration = 5000,
+}: ToastProps) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
@@ -36,14 +41,14 @@ export const Toast = ({ message, type, onClose, duration = 5000 }: ToastProps) =
 
   return (
     <div
-      className={`fixed top-4 right-4 z-50 flex items-center gap-3 rounded-lg border-2 px-6 py-4 text-white shadow-lg transition-all duration-300 animate-slide-in ${typeStyles[type]}`}
+      className={`animate-slide-in fixed top-4 right-4 z-50 flex items-center gap-3 rounded-lg border-2 px-6 py-4 text-white shadow-lg transition-all duration-300 ${typeStyles[type]}`}
       role="alert"
     >
       <span className="text-xl font-bold">{icons[type]}</span>
       <p className="text-sm font-medium">{message}</p>
       <button
         onClick={onClose}
-        className="ml-4 text-white hover:text-gray-200 transition-colors"
+        className="ml-4 text-white transition-colors hover:text-gray-200"
         aria-label="Close notification"
       >
         ✕

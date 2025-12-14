@@ -1,15 +1,15 @@
 import Link from "next/link";
-import { redirect } from "next/navigation"; 
+import { redirect } from "next/navigation";
 import { auth } from "~/server/auth";
-import { api, HydrateClient } from "~/trpc/server"; 
+import { api, HydrateClient } from "~/trpc/server";
 import { LoginCard } from "~/components/layout/LoginCard";
 
 export default async function Home() {
-  const session = await auth(); 
+  const session = await auth();
 
   if (session?.user) {
     void api.post.getLatest.prefetch();
-    redirect("/app"); 
+    redirect("/app");
   }
 
   return (
@@ -45,7 +45,7 @@ export default async function Home() {
             </Link>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <LoginCard /> 
+            <LoginCard />
           </div>
         </div>
       </main>
