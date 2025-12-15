@@ -26,7 +26,7 @@ export const LoginCard = () => {
 
   return (
     <div className="flex w-full max-w-sm flex-col items-center justify-center rounded-xl bg-white/10 p-6 shadow-2xl backdrop-blur-md">
-      <h2 className="mb-6 text-3xl font-semibold text-white">
+      <h2 className="mb-6 text-center text-3xl font-bold tracking-wide text-white font-[family-name:var(--font-nunito)]">
         Welcome to WhaleBuddy
       </h2>
 
