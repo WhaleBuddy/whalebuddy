@@ -1,7 +1,7 @@
 import "~/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Nunito } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { ToastProvider } from "~/components/providers/ToastProvider";
@@ -17,11 +17,16 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
+const nunito = Nunito({
+  subsets: ["latin"],
+  variable: "--font-nunito",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
+    <html lang="en" className={`${geist.variable} ${nunito.variable}`}>
       <body>
         <TRPCReactProvider>
           <ToastProvider>{children}</ToastProvider>
