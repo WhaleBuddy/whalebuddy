@@ -4,8 +4,6 @@ import { discordConfigs } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { env } from "~/env";
 
-const DISCORD_API_URL = "https://discord.com/api/v10";
-
 type DiscordGuild = {
   id: string;
   name: string;
@@ -19,6 +17,38 @@ type DiscordChannel = {
 };
 
 export const discordRouter = createTRPCRouter({
+  getBotInviteUrl: protectedProcedure.query(() => {
+    const clientId = env.AUTH_DISCORD_ID;
+    const permissions = "3072";
+    return `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=${permissions}&scope=bot`;
+  }),
+
+  // Return the single configured guild, or error if bot is not in it
+  getGuild: protectedProcedure.query(async () => {
+    if (!env.DISCORD_BOT_TOKEN) {
+      throw new Error("Discord Bot Token not configured");
+    }
+
+    const response = await fetch(
+      `${env.DISCORD_API_URL}/guilds/${env.DISCORD_GUILD_ID}`,
+      {
+        headers: {
+          Authorization: `Bot ${env.DISCORD_BOT_TOKEN}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      return null; // Bot not in server
+    }
+
+    const guild = (await response.json()) as DiscordGuild;
+    return {
+      id: guild.id,
+      name: guild.name,
+    };
+  }),
+
   getStatus: protectedProcedure.query(async ({ ctx }) => {
     const config = await ctx.db.query.discordConfigs.findFirst({
       where: eq(discordConfigs.userId, ctx.session.user.id),
@@ -41,28 +71,8 @@ export const discordRouter = createTRPCRouter({
       throw new Error("Discord Bot Token not configured");
     }
 
-    const guildsRes = await fetch(`${DISCORD_API_URL}/users/@me/guilds`, {
-      headers: {
-        Authorization: `Bot ${env.DISCORD_BOT_TOKEN}`,
-      },
-    });
-
-    if (!guildsRes.ok) {
-      console.error("Failed to fetch guilds", await guildsRes.text());
-      throw new Error("Failed to fetch Discord guilds");
-    }
-
-    const guilds = (await guildsRes.json()) as DiscordGuild[];
-
-    if (guilds.length === 0) {
-      return [];
-    }
-
-    const guild = guilds[0];
-    if (!guild) return [];
-
     const channelsRes = await fetch(
-      `${DISCORD_API_URL}/guilds/${guild.id}/channels`,
+      `${env.DISCORD_API_URL}/guilds/${env.DISCORD_GUILD_ID}/channels`,
       {
         headers: {
           Authorization: `Bot ${env.DISCORD_BOT_TOKEN}`,
@@ -77,33 +87,63 @@ export const discordRouter = createTRPCRouter({
 
     const channels = (await channelsRes.json()) as DiscordChannel[];
 
+    const guildId = String(env.DISCORD_GUILD_ID);
+
     return channels
       .filter((c) => c.type === 0)
       .map((c) => ({
         id: c.id,
         name: c.name,
-        guildId: guild.id,
+        guildId,
       }));
   }),
 
   saveChannel: protectedProcedure
     .input(
       z.object({
-        guildId: z.string().min(1),
         channelId: z.string().min(1),
         channelName: z.string().min(1),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      if (!env.DISCORD_BOT_TOKEN) {
+        throw new Error("Discord Bot Token not configured");
+      }
+
+      const response = await fetch(
+        `${env.DISCORD_API_URL}/channels/${input.channelId}`,
+        {
+          headers: {
+            Authorization: `Bot ${env.DISCORD_BOT_TOKEN}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Bot cannot access this channel or it does not exist.");
+      }
+
+      const channel = (await response.json()) as DiscordChannel;
+
+      // Validate against the fixed guild ID
+      if (channel.guild_id !== env.DISCORD_GUILD_ID) {
+        throw new Error("Channel does not belong to the configured guild.");
+      }
+
+      if (channel.type !== 0) {
+        throw new Error("Selected channel is not a text channel.");
+      }
+
       const existing = await ctx.db.query.discordConfigs.findFirst({
         where: eq(discordConfigs.userId, ctx.session.user.id),
       });
 
       if (existing) {
+        const guildId = String(env.DISCORD_GUILD_ID);
         await ctx.db
           .update(discordConfigs)
           .set({
-            guildId: input.guildId,
+            guildId,
             channelId: input.channelId,
             channelName: input.channelName,
             status: "connected",
@@ -111,9 +151,10 @@ export const discordRouter = createTRPCRouter({
           })
           .where(eq(discordConfigs.userId, ctx.session.user.id));
       } else {
+        const guildId = String(env.DISCORD_GUILD_ID);
         await ctx.db.insert(discordConfigs).values({
           userId: ctx.session.user.id,
-          guildId: input.guildId,
+          guildId,
           channelId: input.channelId,
           channelName: input.channelName,
           status: "connected",
@@ -137,7 +178,7 @@ export const discordRouter = createTRPCRouter({
     }
 
     const response = await fetch(
-      `${DISCORD_API_URL}/channels/${config.channelId}/messages`,
+      `${env.DISCORD_API_URL}/channels/${config.channelId}/messages`,
       {
         method: "POST",
         headers: {

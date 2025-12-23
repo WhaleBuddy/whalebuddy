@@ -7,17 +7,23 @@ export default function DiscordIntegrationClient() {
   const [selectedChannel, setSelectedChannel] = useState<{
     id: string;
     name: string;
-    guildId?: string;
   } | null>(null);
 
   const { data: statusData, refetch: refetchStatus } =
     api.discord.getStatus.useQuery();
+
+  const { data: guildData, isLoading: isLoadingGuild } =
+    api.discord.getGuild.useQuery();
+
   const { data: channels, isLoading: isLoadingChannels } =
     api.discord.listChannels.useQuery();
 
+  const { data: inviteUrl } = api.discord.getBotInviteUrl.useQuery();
+
   const saveChannelMutation = api.discord.saveChannel.useMutation({
-    onSuccess: async () => {
-      await refetchStatus();
+    onSuccess: () => {
+      void refetchStatus();
+      setSelectedChannel(null);
     },
   });
 
@@ -26,7 +32,6 @@ export default function DiscordIntegrationClient() {
   const handleSaveChannel = () => {
     if (!selectedChannel) return;
     saveChannelMutation.mutate({
-      guildId: selectedChannel.guildId ?? "unknown",
       channelId: selectedChannel.id,
       channelName: selectedChannel.name,
     });
@@ -34,6 +39,18 @@ export default function DiscordIntegrationClient() {
 
   const handleSendTest = () => {
     sendTestMutation.mutate();
+  };
+
+  const handleChannelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const channel = channels?.find((c) => c.id === e.target.value);
+    setSelectedChannel(
+      channel
+        ? {
+            id: channel.id,
+            name: channel.name,
+          }
+        : null,
+    );
   };
 
   return (
@@ -62,40 +79,71 @@ export default function DiscordIntegrationClient() {
         </section>
 
         <section className="bg-card rounded-lg border p-6 shadow-sm">
-          <h2 className="mb-4 text-xl font-semibold">2. Escolher Canal</h2>
-          <div className="flex items-end gap-4">
-            <div className="flex-1">
-              <label className="mb-2 block text-sm font-medium">
-                Selecione um canal
-              </label>
-              <select
-                className="bg-background w-full rounded-md border p-2"
-                value={selectedChannel?.id ?? ""}
-                onChange={(e) => {
-                  const channel = channels?.find(
-                    (c) => c.id === e.target.value,
-                  );
-                  setSelectedChannel(channel ?? null);
-                }}
-                disabled={isLoadingChannels}
+          <h2 className="mb-4 text-xl font-semibold">
+            2. Configuração do Servidor
+          </h2>
+
+          <div className="mb-6 rounded-md bg-blue-50 p-4 dark:bg-blue-900/20">
+            <h3 className="mb-2 font-medium text-blue-900 dark:text-blue-100">
+              Servidor Configurado:{" "}
+              {isLoadingGuild
+                ? "Carregando..."
+                : guildData
+                  ? guildData.name
+                  : "Bot não encontrado"}
+            </h3>
+            <p className="mb-3 text-sm text-blue-800 dark:text-blue-200">
+              Certifique-se de que o bot foi adicionado ao servidor configurado.
+            </p>
+            {inviteUrl && (
+              <a
+                href={inviteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium"
               >
-                <option value="">Selecione...</option>
-                {channels?.map((channel) => (
-                  <option key={channel.id} value={channel.id}>
-                    #{channel.name}
+                Adicionar Bot ao Servidor
+                <span className="ml-2">↗</span>
+              </a>
+            )}
+          </div>
+
+          <div className="grid gap-4">
+            <div className="flex items-end gap-4">
+              <div className="flex-1">
+                <label className="mb-2 block text-sm font-medium">
+                  Selecione um canal
+                </label>
+                <select
+                  className="bg-background w-full rounded-md border p-2"
+                  value={selectedChannel?.id ?? ""}
+                  onChange={handleChannelChange}
+                  disabled={isLoadingChannels || !guildData}
+                >
+                  <option value="">
+                    {!guildData
+                      ? isLoadingGuild
+                        ? "Verificando servidor..."
+                        : "Bot não está no servidor"
+                      : "Selecione um canal..."}
                   </option>
-                ))}
-              </select>
+                  {channels?.map((channel) => (
+                    <option key={channel.id} value={channel.id}>
+                      #{channel.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button
+                onClick={handleSaveChannel}
+                disabled={!selectedChannel || saveChannelMutation.isPending}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 disabled:opacity-50"
+              >
+                {saveChannelMutation.isPending
+                  ? "Salvando..."
+                  : "Confirmar Canal"}
+              </button>
             </div>
-            <button
-              onClick={handleSaveChannel}
-              disabled={!selectedChannel || saveChannelMutation.isPending}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 disabled:opacity-50"
-            >
-              {saveChannelMutation.isPending
-                ? "Salvando..."
-                : "Confirmar Canal"}
-            </button>
           </div>
           {saveChannelMutation.isSuccess && (
             <p className="mt-2 text-sm text-green-600">
