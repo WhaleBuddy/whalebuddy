@@ -43,6 +43,15 @@ export default async function Home() {
                 to deploy it.
               </div>
             </Link>
+            <Link
+              className="flex max-w-xs flex-col gap-4 rounded-xl bg-[#5865F2]/20 p-4 ring-1 ring-[#5865F2]/50 hover:bg-[#5865F2]/30"
+              href="/integration/discord/connect"
+            >
+              <h3 className="text-2xl font-bold">Conectar com Discord →</h3>
+              <div className="text-lg">
+                Configure a integração do bot WhaleBuddy com seu servidor.
+              </div>
+            </Link>
           </div>
           <div className="flex flex-col items-center gap-2">
             <LoginCard />

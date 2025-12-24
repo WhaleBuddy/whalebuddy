@@ -23,7 +23,6 @@ export const discordRouter = createTRPCRouter({
     return `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=${permissions}&scope=bot`;
   }),
 
-  // Return the single configured guild, or error if bot is not in it
   getGuild: protectedProcedure.query(async () => {
     if (!env.DISCORD_BOT_TOKEN) {
       throw new Error("Discord Bot Token not configured");
@@ -39,7 +38,7 @@ export const discordRouter = createTRPCRouter({
     );
 
     if (!response.ok) {
-      return null; // Bot not in server
+      return null;
     }
 
     const guild = (await response.json()) as DiscordGuild;
@@ -125,7 +124,6 @@ export const discordRouter = createTRPCRouter({
 
       const channel = (await response.json()) as DiscordChannel;
 
-      // Validate against the fixed guild ID
       if (channel.guild_id !== env.DISCORD_GUILD_ID) {
         throw new Error("Channel does not belong to the configured guild.");
       }
