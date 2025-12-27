@@ -1,10 +1,13 @@
 "use client";
 
-import * as React from "react";
+import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { GoogleSignInButton } from "~/app/_components/GoogleSignInButton";
+import { EmailSignInForm } from "~/app/_components/EmailSignInForm";
+import { SignOutButton } from "~/app/_components/SignOutButton";
 
 export const LoginCard = () => {
+  const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const authError = searchParams.get("error");
 
@@ -24,26 +27,51 @@ export const LoginCard = () => {
     }
   };
 
+  if (status === "authenticated") {
+    return (
+      <div className="flex w-full max-w-sm flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl transition-all hover:bg-white/10">
+        <h2 className="mb-2 text-2xl font-bold text-white">
+          Bem-vindo!
+        </h2>
+        <p className="mb-8 text-sm text-slate-400">
+          Você está logado como <span className="font-semibold text-white">{session.user?.email}</span>
+        </p>
+        <div className="w-full">
+          <SignOutButton />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex w-full max-w-sm flex-col items-center justify-center rounded-xl bg-white/10 p-6 shadow-2xl backdrop-blur-md">
-      <h2 className="mb-6 text-3xl font-semibold text-white">
-        Welcome to WhaleBuddy
+    <div className="mt-8 flex w-full max-w-md flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl transition-all">
+      <h2 className="mb-8 text-center text-3xl font-bold tracking-tight text-white">
+        Acesse sua conta
       </h2>
 
-      {authError && (
-        <div className="mb-4 w-full rounded-md border border-red-500 bg-red-100 p-3 text-sm text-red-800">
-          <p className="font-medium">Sign-in Error:</p>
-          <p>{getErrorMessage(authError)}</p>
+      {status === "loading" ? (
+        <div className="flex h-40 items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-white/20 border-t-white"></div>
         </div>
+      ) : (
+        <>
+          {authError && (
+            <div className="mb-4 w-full rounded-md border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-200">
+              <p className="font-medium">Sign-in Error:</p>
+              <p>{getErrorMessage(authError)}</p>
+            </div>
+          )}
+
+          <div className="w-full">
+            <GoogleSignInButton />
+            <EmailSignInForm />
+          </div>
+
+          <p className="mt-4 text-xs text-white/70">
+            By signing in, you agree to our terms and conditions.
+          </p>
+        </>
       )}
-
-      <div className="w-full">
-        <GoogleSignInButton />
-      </div>
-
-      <p className="mt-4 text-xs text-white/70">
-        By signing in, you agree to our terms and conditions.
-      </p>
     </div>
   );
 };

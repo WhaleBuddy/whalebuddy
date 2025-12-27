@@ -11,9 +11,9 @@ export const SignOutButton = () => {
   return (
     <button
       onClick={handleSignOut}
-      className="rounded-lg bg-red-600 px-8 py-2 font-semibold text-white no-underline transition hover:bg-red-700"
+      className="w-full rounded-xl bg-red-500/10 px-8 py-3 font-semibold text-red-500 border border-red-500/20 no-underline transition-all hover:bg-red-500 hover:text-white"
     >
-      Sign Out
+      Sair da conta
     </button>
   );
 };
