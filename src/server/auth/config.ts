@@ -1,6 +1,6 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import DiscordProvider from "next-auth/providers/discord";
 
 import { db } from "~/server/db";
 import {
@@ -20,11 +20,13 @@ declare module "next-auth" {
 
 export const authConfig = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    DiscordProvider({
+      checks: ["none"],
     }),
   ],
+  pages: {
+    signIn: "/auth/signin",
+  },
   adapter: DrizzleAdapter(db, {
     usersTable: users,
     accountsTable: accounts,
@@ -40,4 +42,10 @@ export const authConfig = {
       },
     }),
   },
+  secret:
+    process.env.AUTH_SECRET && process.env.AUTH_SECRET.length > 0
+      ? process.env.AUTH_SECRET
+      : "super-secret-fallback-dev-only",
+  trustHost: true,
+  debug: true,
 } satisfies NextAuthConfig;
