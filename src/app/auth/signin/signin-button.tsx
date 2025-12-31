@@ -29,7 +29,11 @@ function SignInButtonContent() {
 
 export function SignInButton() {
   return (
-    <Suspense fallback={<div className="w-full h-14 animate-pulse bg-[#5865F2]/50 rounded-xl" />}>
+    <Suspense
+      fallback={
+        <div className="h-14 w-full animate-pulse rounded-xl bg-[#5865F2]/50" />
+      }
+    >
       <SignInButtonContent />
     </Suspense>
   );
