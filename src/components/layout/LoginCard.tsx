@@ -30,11 +30,12 @@ export const LoginCard = () => {
   if (status === "authenticated") {
     return (
       <div className="flex w-full max-w-sm flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl transition-all hover:bg-white/10">
-        <h2 className="mb-2 text-2xl font-bold text-white">
-          Bem-vindo!
-        </h2>
+        <h2 className="mb-2 text-2xl font-bold text-white">Welcome!</h2>
         <p className="mb-8 text-sm text-slate-400">
-          Você está logado como <span className="font-semibold text-white">{session.user?.email}</span>
+          You are logged in as{" "}
+          <span className="font-semibold text-white">
+            {session.user?.email}
+          </span>
         </p>
         <div className="w-full">
           <SignOutButton />
@@ -46,7 +47,7 @@ export const LoginCard = () => {
   return (
     <div className="mt-8 flex w-full max-w-md flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl transition-all">
       <h2 className="mb-8 text-center text-3xl font-bold tracking-tight text-white">
-        Acesse sua conta
+        Access your account
       </h2>
 
       {status === "loading" ? (

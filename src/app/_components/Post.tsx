@@ -16,21 +16,21 @@ export function LatestPost() {
   return (
     <div className="mt-12 w-full max-w-2xl rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl transition-all hover:bg-white/10">
       <h3 className="mb-6 text-2xl font-bold tracking-tight text-white">
-        Seu Post Mais Recente
+        Your Latest Post
       </h3>
 
       {latestPost ? (
         <div className="space-y-2">
           <p className="text-xl font-medium text-white/90">
-            <span className="text-slate-500">Título:</span> {latestPost.name}
+            <span className="text-slate-500">Title:</span> {latestPost.name}
           </p>
           <p className="text-sm font-semibold text-indigo-400">
-            Criado em: {latestPost.createdAt.toLocaleTimeString()}
+            Created at: {latestPost.createdAt.toLocaleTimeString()}
           </p>
         </div>
       ) : (
         <p className="text-slate-400 italic">
-          Você ainda não criou nenhum post. Que tal começar agora?
+          You haven't created any posts yet. How about starting now?
         </p>
       )}
     </div>

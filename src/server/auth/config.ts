@@ -39,9 +39,9 @@ declare module "next-auth" {
  */
 export const authConfig = {
   pages: {
-    signIn: "/",                           // Página de login customizada (home)
-    verifyRequest: "/auth/verify-request", // Página "verifique seu email"
-    error: "/auth/error",                  // Página de erro customizada
+    signIn: "/", // Custom sign-in page (home)
+    verifyRequest: "/auth/verify-request", // "Verify your email" page
+    error: "/auth/error", // Custom error page
   },
   trustHost: true,
   providers: [
@@ -50,22 +50,26 @@ export const authConfig = {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    EmailProvider({
-      server: {
-        host: env.EMAIL_SERVER_HOST,
-        port: env.EMAIL_SERVER_PORT,
-        secure: env.EMAIL_SERVER_PORT === 465,
-        auth: {
-          user: env.EMAIL_SERVER_USER,
-          pass: env.EMAIL_SERVER_PASSWORD,
-        },
-        tls: {
-          rejectUnauthorized: env.NODE_ENV === "production",
-        },
-      },
-      from: env.EMAIL_FROM,
-      maxAge: 60 * 60, // Magic link válido por 1 hora
-    }),
+    ...(env.ENABLE_EMAIL_AUTH
+      ? [
+        EmailProvider({
+          server: {
+            host: env.EMAIL_SERVER_HOST,
+            port: env.EMAIL_SERVER_PORT,
+            secure: env.EMAIL_SERVER_PORT === 465,
+            auth: {
+              user: env.EMAIL_SERVER_USER,
+              pass: env.EMAIL_SERVER_PASSWORD,
+            },
+            tls: {
+              rejectUnauthorized: env.NODE_ENV === "production",
+            },
+          },
+          from: env.EMAIL_FROM,
+          maxAge: 60 * 60, // Magic link valid for 1 hour
+        }),
+      ]
+      : []),
     /**
      * ...add more providers here.
      *

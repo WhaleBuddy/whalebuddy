@@ -13,18 +13,37 @@ export const env = createEnv({
         : z.string().optional(),
     AUTH_DISCORD_ID: z.string(),
     AUTH_DISCORD_SECRET: z.string(),
-    GOOGLE_CLIENT_ID: z.string().optional(),
-    GOOGLE_CLIENT_SECRET: z.string().optional(),
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_CLIENT_SECRET: z.string(),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
     // Email Provider (Magic Link)
-    EMAIL_SERVER_HOST: z.string().optional(),
-    EMAIL_SERVER_PORT: z.coerce.number().optional(),
-    EMAIL_SERVER_USER: z.string().optional(),
-    EMAIL_SERVER_PASSWORD: z.string().optional(),
-    EMAIL_FROM: z.string().optional(),
+    ENABLE_EMAIL_AUTH: z
+      .enum(["true", "false"])
+      .default("false")
+      .transform((v) => v === "true"),
+    EMAIL_SERVER_HOST:
+      process.env.ENABLE_EMAIL_AUTH === "true"
+        ? z.string().min(1)
+        : z.string().optional(),
+    EMAIL_SERVER_PORT:
+      process.env.ENABLE_EMAIL_AUTH === "true"
+        ? z.coerce.number()
+        : z.coerce.number().optional(),
+    EMAIL_SERVER_USER:
+      process.env.ENABLE_EMAIL_AUTH === "true"
+        ? z.string().min(1)
+        : z.string().optional(),
+    EMAIL_SERVER_PASSWORD:
+      process.env.ENABLE_EMAIL_AUTH === "true"
+        ? z.string().min(1)
+        : z.string().optional(),
+    EMAIL_FROM:
+      process.env.ENABLE_EMAIL_AUTH === "true"
+        ? z.string().email()
+        : z.string().optional(),
   },
 
   /**
@@ -48,6 +67,7 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    ENABLE_EMAIL_AUTH: process.env.ENABLE_EMAIL_AUTH,
     EMAIL_SERVER_HOST: process.env.EMAIL_SERVER_HOST,
     EMAIL_SERVER_PORT: process.env.EMAIL_SERVER_PORT,
     EMAIL_SERVER_USER: process.env.EMAIL_SERVER_USER,
