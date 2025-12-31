@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 
-export const EmailSignInForm: React.FC = () => {
+function EmailSignInFormContent() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -70,11 +70,10 @@ export const EmailSignInForm: React.FC = () => {
         <button
           type="submit"
           disabled={loading || email.length === 0}
-          className={`relative flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold tracking-wide transition-all focus:ring-2 focus:ring-indigo-500/20 focus:ring-offset-2 focus:ring-offset-slate-950 focus:outline-none ${
-            loading || email.length === 0
+          className={`relative flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold tracking-wide transition-all focus:ring-2 focus:ring-indigo-500/20 focus:ring-offset-2 focus:ring-offset-slate-950 focus:outline-none ${loading || email.length === 0
               ? "cursor-not-allowed bg-indigo-500/20 text-indigo-300/40"
               : "bg-indigo-600 text-white shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:bg-indigo-500 hover:shadow-[0_0_25px_rgba(79,70,229,0.5)] active:scale-[0.98]"
-          }`}
+            }`}
         >
           {loading ? (
             <div className="flex items-center space-x-2">
@@ -88,16 +87,23 @@ export const EmailSignInForm: React.FC = () => {
 
         {message && (
           <div
-            className={`animate-slide-in rounded-xl p-4 text-xs font-semibold backdrop-blur-sm transition-all ${
-              message.includes("sent")
+            className={`animate-slide-in rounded-xl p-4 text-xs font-semibold backdrop-blur-sm transition-all ${message.includes("sent")
                 ? "border border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
                 : "border border-red-500/20 bg-red-500/10 text-red-400"
-            }`}
+              }`}
           >
             {message}
           </div>
         )}
       </form>
     </div>
+  );
+}
+
+export const EmailSignInForm: React.FC = () => {
+  return (
+    <Suspense fallback={<div className="w-full h-32 animate-pulse bg-white/5 rounded-xl" />}>
+      <EmailSignInFormContent />
+    </Suspense>
   );
 };

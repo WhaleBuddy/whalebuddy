@@ -1,12 +1,13 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { GoogleSignInButton } from "~/app/_components/GoogleSignInButton";
 import { EmailSignInForm } from "~/app/_components/EmailSignInForm";
 import { SignOutButton } from "~/app/_components/SignOutButton";
 
-export const LoginCard = () => {
+function LoginCardContent() {
   const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const authError = searchParams.get("error");
@@ -74,5 +75,23 @@ export const LoginCard = () => {
         </>
       )}
     </div>
+  );
+}
+
+function LoginCardFallback() {
+  return (
+    <div className="mt-8 flex w-full max-w-md flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
+      <div className="flex h-40 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-white/20 border-t-white"></div>
+      </div>
+    </div>
+  );
+}
+
+export const LoginCard = () => {
+  return (
+    <Suspense fallback={<LoginCardFallback />}>
+      <LoginCardContent />
+    </Suspense>
   );
 };
