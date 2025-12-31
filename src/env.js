@@ -15,10 +15,36 @@ export const env = createEnv({
     DISCORD_BOT_TOKEN: z.string().optional(),
     DISCORD_API_URL: z.string().url(),
     DISCORD_GUILD_ID: z.string().min(1),
+
     DATABASE_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    // Email Provider (Magic Link)
+    ENABLE_EMAIL_AUTH: z
+      .enum(["true", "false"])
+      .default("false")
+      .transform((v) => v === "true"),
+    EMAIL_SERVER_HOST:
+      process.env.ENABLE_EMAIL_AUTH === "true"
+        ? z.string().min(1)
+        : z.string().optional(),
+    EMAIL_SERVER_PORT:
+      process.env.ENABLE_EMAIL_AUTH === "true"
+        ? z.coerce.number()
+        : z.coerce.number().optional(),
+    EMAIL_SERVER_USER:
+      process.env.ENABLE_EMAIL_AUTH === "true"
+        ? z.string().min(1)
+        : z.string().optional(),
+    EMAIL_SERVER_PASSWORD:
+      process.env.ENABLE_EMAIL_AUTH === "true"
+        ? z.string().min(1)
+        : z.string().optional(),
+    EMAIL_FROM:
+      process.env.ENABLE_EMAIL_AUTH === "true"
+        ? z.string().email()
+        : z.string().optional(),
   },
 
   client: {
@@ -37,6 +63,12 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    ENABLE_EMAIL_AUTH: process.env.ENABLE_EMAIL_AUTH,
+    EMAIL_SERVER_HOST: process.env.EMAIL_SERVER_HOST,
+    EMAIL_SERVER_PORT: process.env.EMAIL_SERVER_PORT,
+    EMAIL_SERVER_USER: process.env.EMAIL_SERVER_USER,
+    EMAIL_SERVER_PASSWORD: process.env.EMAIL_SERVER_PASSWORD,
+    EMAIL_FROM: process.env.EMAIL_FROM,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,

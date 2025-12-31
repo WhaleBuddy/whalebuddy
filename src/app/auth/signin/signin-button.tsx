@@ -1,9 +1,10 @@
 "use client";
 
+import { Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 
-export function SignInButton() {
+function SignInButtonContent() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/";
 
@@ -23,5 +24,17 @@ export function SignInButton() {
       </svg>
       <span className="relative z-10 text-lg">Conectar com Discord</span>
     </button>
+  );
+}
+
+export function SignInButton() {
+  return (
+    <Suspense
+      fallback={
+        <div className="h-14 w-full animate-pulse rounded-xl bg-[#5865F2]/50" />
+      }
+    >
+      <SignInButtonContent />
+    </Suspense>
   );
 }
