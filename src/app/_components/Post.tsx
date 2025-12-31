@@ -30,7 +30,7 @@ export function LatestPost() {
         </div>
       ) : (
         <p className="text-slate-400 italic">
-          You haven't created any posts yet. How about starting now?
+          You haven&apos;t created any posts yet. How about starting now?
         </p>
       )}
     </div>

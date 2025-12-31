@@ -50,8 +50,9 @@ export const GoogleSignInButton = () => {
     <button
       onClick={handleSignIn}
       disabled={isLoading}
-      className={`group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-950 focus:outline-none ${isLoading ? "cursor-not-allowed opacity-50" : ""
-        }`}
+      className={`group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-950 focus:outline-none ${
+        isLoading ? "cursor-not-allowed opacity-50" : ""
+      }`}
     >
       {!isLoading && <GoogleIcon />}
       <span>{isLoading ? "Signing in..." : "Sign in with Google"}</span>
