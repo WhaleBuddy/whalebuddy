@@ -4,6 +4,34 @@ import { signIn } from "next-auth/react";
 import * as React from "react";
 import { useState } from "react";
 
+const GoogleIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g fill="none" fillRule="evenodd">
+      <path
+        d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"
+        fill="#4285F4"
+      />
+      <path
+        d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"
+        fill="#34A853"
+      />
+      <path
+        d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"
+        fill="#FBBC05"
+      />
+      <path
+        d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
+        fill="#EA4335"
+      />
+    </g>
+  </svg>
+);
+
 export const GoogleSignInButton = () => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,9 +53,7 @@ export const GoogleSignInButton = () => {
       className={`group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-950 focus:outline-none ${isLoading ? "cursor-not-allowed opacity-50" : ""
         }`}
     >
-      <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24">
-        <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.908 3.152-1.928 4.172-1.228 1.228-3.14 2.56-6.832 2.56-5.94 0-10.656-4.8-10.656-10.74s4.716-10.74 10.656-10.74c3.224 0 5.504 1.304 7.224 2.992l2.304-2.304c-2.064-1.956-4.744-3.412-9.528-3.412-8.32 0-15.116 6.796-15.116 15.116s6.796 15.116 15.116 15.116c4.432 0 7.84-1.472 10.512-4.256 2.752-2.752 3.6-6.624 3.6-9.768 0-.936-.08-1.816-.232-2.608h-13.84z" />
-      </svg>
+      {!isLoading && <GoogleIcon />}
       <span>{isLoading ? "Signing in..." : "Sign in with Google"}</span>
     </button>
   );

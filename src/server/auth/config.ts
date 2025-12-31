@@ -13,42 +13,24 @@ import {
   verificationTokens,
 } from "~/server/db/schema";
 
-/**
- * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
- * object and keep type safety.
- *
- * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
- */
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
     } & DefaultSession["user"];
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
-/**
- * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- *
- * @see https://next-auth.js.org/configuration/options
- */
 export const authConfig = {
   pages: {
-    signIn: "/", // Custom sign-in page (home)
-    verifyRequest: "/auth/verify-request", // "Verify your email" page
-    error: "/auth/error", // Custom error page
+    signIn: "/auth/signin",
+    verifyRequest: "/auth/verify-request",
+    error: "/auth/error",
   },
   trustHost: true,
   providers: [
-    DiscordProvider,
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    DiscordProvider({
+      checks: ["none"],
     }),
     ...(env.ENABLE_EMAIL_AUTH
       ? [
@@ -70,15 +52,6 @@ export const authConfig = {
         }),
       ]
       : []),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
   ],
   adapter: DrizzleAdapter(db, {
     usersTable: users,
@@ -95,5 +68,9 @@ export const authConfig = {
       },
     }),
   },
+  secret:
+    process.env.AUTH_SECRET && process.env.AUTH_SECRET.length > 0
+      ? process.env.AUTH_SECRET
+      : "super-secret-fallback-dev-only",
   debug: env.NODE_ENV === "development",
 } satisfies NextAuthConfig;
