@@ -106,3 +106,41 @@ export const verificationTokens = createTable(
   }),
   (t) => [primaryKey({ columns: [t.identifier, t.token] })],
 );
+
+export const discordIntegrations = createTable(
+  "discord_integration",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    userId: d
+      .varchar({ length: 255 })
+      .notNull()
+      .references(() => users.id),
+    channelId: d.varchar({ length: 255 }).notNull(),
+    channelName: d.varchar({ length: 255 }),
+    guildId: d.varchar({ length: 255 }).notNull(),
+    status: d
+      .varchar({ length: 50 })
+      .$type<"pending" | "completed" | "error">()
+      .notNull()
+      .default("pending"),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  }),
+  (t) => [
+    index("discord_user_id_idx").on(t.userId),
+    index("discord_channel_id_idx").on(t.channelId),
+  ],
+);
+
+export const discordIntegrationsRelations = relations(
+  discordIntegrations,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [discordIntegrations.userId],
+      references: [users.id],
+    }),
+  }),
+);
