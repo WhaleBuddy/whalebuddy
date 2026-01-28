@@ -26,6 +26,9 @@ export const discordRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      if (!env.DISCORD_BOT_TOKEN || !env.DISCORD_GUILD_ID) {
+        throw new Error("Discord integration is not configured");
+      }
       const { channelId, channelName } = input;
       const userId = ctx.session.user.id;
       try {
@@ -155,6 +158,9 @@ export const discordRouter = createTRPCRouter({
     return integration;
   }),
   listChannels: protectedProcedure.query(async () => {
+    if (!env.DISCORD_BOT_TOKEN || !env.DISCORD_GUILD_ID) {
+      throw new Error("Discord integration is not configured");
+    }
     try {
       const response = await fetch(
         `https://discord.com/api/v10/guilds/${env.DISCORD_GUILD_ID}/channels`,

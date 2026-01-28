@@ -20,8 +20,8 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    DISCORD_BOT_TOKEN: z.string(),
-    DISCORD_GUILD_ID: z.string(),
+    DISCORD_BOT_TOKEN: z.string().optional(),
+    DISCORD_GUILD_ID: z.string().optional(),
   },
 
   runtimeEnv: {
