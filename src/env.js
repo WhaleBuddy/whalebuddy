@@ -11,19 +11,14 @@ export const env = createEnv({
     AUTH_DISCORD_SECRET: z.string(),
     GOOGLE_CLIENT_ID: z.string().optional(),
     GOOGLE_CLIENT_SECRET: z.string().optional(),
-
     DISCORD_BOT_TOKEN: z.string().optional(),
     DISCORD_API_URL: z.string().url(),
-    DISCORD_GUILD_ID: z.string().min(1),
-
+    DISCORD_GUILD_ID: z.string().optional(),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    DISCORD_BOT_TOKEN: z.string().optional(),
-    DISCORD_GUILD_ID: z.string().optional(),
   },
-
   runtimeEnv: {
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
@@ -35,8 +30,6 @@ export const env = createEnv({
     DISCORD_GUILD_ID: process.env.DISCORD_GUILD_ID,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN,
-    DISCORD_GUILD_ID: process.env.DISCORD_GUILD_ID,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,
