@@ -114,7 +114,7 @@ export function DiscordIntegration() {
       {/* Info */}
       <div className="mt-4 rounded bg-blue-50 p-4 text-sm text-blue-800">
         <p className="font-semibold">ℹ️ How it works:</p>
-        <ul className="ml-4 mt-2 list-disc">
+        <ul className="mt-2 ml-4 list-disc">
           <li>Select a Discord text channel from your server</li>
           <li>The bot will verify it has permission to send messages</li>
           <li>A test message will be sent to confirm the integration</li>

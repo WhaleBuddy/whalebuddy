@@ -1,4 +1,4 @@
-  import { z } from "zod";
+import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { discordIntegrations } from "~/server/db/schema";
@@ -102,9 +102,10 @@ export const discordRouter = createTRPCRouter({
         }
 
         // Check if user already has an integration
-        const existingIntegration = await ctx.db.query.discordIntegrations.findFirst({
-          where: eq(discordIntegrations.userId, userId),
-        });
+        const existingIntegration =
+          await ctx.db.query.discordIntegrations.findFirst({
+            where: eq(discordIntegrations.userId, userId),
+          });
 
         if (existingIntegration) {
           // Update existing integration (no duplication)
@@ -150,9 +151,10 @@ export const discordRouter = createTRPCRouter({
         }
       } catch (error) {
         // Update or create integration with error status
-        const existingIntegration = await ctx.db.query.discordIntegrations.findFirst({
-          where: eq(discordIntegrations.userId, userId),
-        });
+        const existingIntegration =
+          await ctx.db.query.discordIntegrations.findFirst({
+            where: eq(discordIntegrations.userId, userId),
+          });
 
         if (existingIntegration) {
           await ctx.db
