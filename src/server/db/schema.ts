@@ -114,7 +114,8 @@ export const discordIntegrations = createTable(
     userId: d
       .varchar({ length: 255 })
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" })
+      .unique(),
     channelId: d.varchar({ length: 255 }).notNull(),
     channelName: d.varchar({ length: 255 }),
     guildId: d.varchar({ length: 255 }).notNull(),

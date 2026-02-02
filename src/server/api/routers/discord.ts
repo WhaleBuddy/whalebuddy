@@ -4,6 +4,8 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { discordIntegrations } from "~/server/db/schema";
 import { env } from "~/env";
 
+const DISCORD_API_BASE = "https://discord.com/api/v10";
+
 interface DiscordChannel {
   id: string;
   name: string;
@@ -32,7 +34,7 @@ export const discordRouter = createTRPCRouter({
       try {
         // Validate that the channel exists in Discord
         const channelResponse = await fetch(
-          `https://discord.com/api/v10/channels/${channelId}`,
+          `${DISCORD_API_BASE}/channels/${channelId}`,
           {
             headers: {
               Authorization: `Bot ${env.DISCORD_BOT_TOKEN}`,
@@ -65,7 +67,7 @@ export const discordRouter = createTRPCRouter({
 
         // Check bot permissions for the channel
         const botPermissionsResponse = await fetch(
-          `https://discord.com/api/v10/guilds/${env.DISCORD_GUILD_ID}/members/@me`,
+          `${DISCORD_API_BASE}/guilds/${env.DISCORD_GUILD_ID}/members/@me`,
           {
             headers: {
               Authorization: `Bot ${env.DISCORD_BOT_TOKEN}`,
@@ -79,7 +81,7 @@ export const discordRouter = createTRPCRouter({
 
         // Try to send a test message to verify send permissions
         const testMessageResponse = await fetch(
-          `https://discord.com/api/v10/channels/${channelId}/messages`,
+          `${DISCORD_API_BASE}/channels/${channelId}/messages`,
           {
             method: "POST",
             headers: {
@@ -183,7 +185,7 @@ export const discordRouter = createTRPCRouter({
   listChannels: protectedProcedure.query(async () => {
     try {
       const response = await fetch(
-        `https://discord.com/api/v10/guilds/${env.DISCORD_GUILD_ID}/channels`,
+        `${DISCORD_API_BASE}/guilds/${env.DISCORD_GUILD_ID}/channels`,
         {
           headers: {
             Authorization: `Bot ${env.DISCORD_BOT_TOKEN}`,
