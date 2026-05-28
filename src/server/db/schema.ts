@@ -123,3 +123,25 @@ export const discordConfigs = createTable(
   }),
   (t) => [index("discord_user_id_idx").on(t.userId)],
 );
+
+export const telegramConfigs = createTable(
+  "telegram_config",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    userId: d
+      .varchar({ length: 255 })
+      .notNull()
+      .references(() => users.id),
+    token: d.varchar({ length: 255 }).notNull(),
+    chatId: d.varchar({ length: 255 }),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  }),
+  (t) => [
+    index("telegram_user_id_idx").on(t.userId),
+    index("telegram_token_idx").on(t.token),
+  ],
+);
