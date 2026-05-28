@@ -1,5 +1,6 @@
 "use client";
 
+import { env } from "~/env.js";
 import { api } from "~/trpc/react";
 import { TelegramStatusSection } from "./telegram-status-section";
 
@@ -46,8 +47,16 @@ export function TelegramIntegrationPage() {
     error: statusError,
   } = api.telegram.getStatus.useQuery();
 
+  const sendTestMessage = api.telegram.sendTestMessage.useMutation();
+
   const isLoading = isLoadingToken || isLoadingStatus;
   const error = deriveError(tokenError, statusError);
+
+  const testResult = sendTestMessage.isSuccess
+    ? "success"
+    : sendTestMessage.isError
+      ? "error"
+      : null;
 
   return (
     <div className="container mx-auto max-w-3xl py-10">
@@ -68,6 +77,10 @@ export function TelegramIntegrationPage() {
           connected={statusData?.connected ?? false}
           isLoading={isLoading}
           error={error}
+          botUsername={env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME}
+          onSendTestMessage={() => sendTestMessage.mutate()}
+          isSendingTestMessage={sendTestMessage.isPending}
+          testResult={testResult}
         />
 
         <section className="bg-card rounded-lg border p-6 shadow-sm">

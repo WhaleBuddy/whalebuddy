@@ -1,10 +1,16 @@
 "use client";
 
+import { useState } from "react";
+
 interface TelegramStatusSectionProps {
   token: string | undefined;
   connected: boolean;
   isLoading: boolean;
   error: string | null;
+  botUsername: string | undefined;
+  onSendTestMessage: () => void;
+  isSendingTestMessage: boolean;
+  testResult: "success" | "error" | null;
 }
 
 function CopyIcon() {
@@ -70,10 +76,16 @@ function LoadingSpinner() {
 }
 
 function TokenDisplay({ token }: { token: string }) {
-  const copyToken = () => void navigator.clipboard.writeText(token);
+  const [copied, setCopied] = useState(false);
+
+  const copyToken = () => {
+    void navigator.clipboard.writeText(token);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <div className="flex items-center gap-3 rounded-md border bg-gray-50 px-4 py-3 dark:bg-gray-800">
+    <div className="relative flex items-center gap-3 rounded-md border bg-gray-50 px-4 py-3 dark:bg-gray-800">
       <span className="flex-1 font-mono text-lg tracking-widest">{token}</span>
       <button
         type="button"
@@ -83,6 +95,14 @@ function TokenDisplay({ token }: { token: string }) {
       >
         <CopyIcon />
       </button>
+      {copied && (
+        <span
+          role="tooltip"
+          className="absolute right-12 top-1/2 -translate-y-1/2 rounded bg-gray-800 px-2 py-1 text-xs text-white dark:bg-gray-200 dark:text-gray-800"
+        >
+          Token copiado
+        </span>
+      )}
     </div>
   );
 }
@@ -92,6 +112,10 @@ export function TelegramStatusSection({
   connected,
   isLoading,
   error,
+  botUsername,
+  onSendTestMessage,
+  isSendingTestMessage,
+  testResult,
 }: TelegramStatusSectionProps) {
   if (error) {
     return (
@@ -109,18 +133,44 @@ export function TelegramStatusSection({
     );
   }
 
+  const telegramUrl = botUsername ? `https://t.me/${botUsername}` : "https://t.me";
+
   return (
     <section className="bg-card rounded-lg border p-6 shadow-sm">
       <StatusIndicator connected={connected} />
       <h2 className="mb-4 text-xl font-semibold">Seu Token de Ativação</h2>
       {token && <TokenDisplay token={token} />}
-      <button
-        type="button"
-        className="mt-4 inline-flex items-center rounded-md bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      >
-        Abrir no Telegram
-        <ExternalLinkIcon />
-      </button>
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <a
+          href={telegramUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center rounded-md bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Abrir no Telegram
+          <ExternalLinkIcon />
+        </a>
+        {connected && (
+          <button
+            type="button"
+            onClick={onSendTestMessage}
+            disabled={isSendingTestMessage}
+            className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+          >
+            {isSendingTestMessage ? "Enviando..." : "Enviar mensagem de teste"}
+          </button>
+        )}
+      </div>
+      {testResult === "success" && (
+        <p className="mt-3 text-sm text-green-600 dark:text-green-400">
+          Mensagem enviada com sucesso. Verifique seu Telegram.
+        </p>
+      )}
+      {testResult === "error" && (
+        <p className="mt-3 text-sm text-red-600 dark:text-red-400">
+          Não foi possível enviar a mensagem de teste. Tente novamente.
+        </p>
+      )}
     </section>
   );
 }

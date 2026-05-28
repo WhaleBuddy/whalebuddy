@@ -16,6 +16,8 @@ export const env = createEnv({
     DISCORD_API_URL: z.string().url(),
     DISCORD_GUILD_ID: z.string().min(1),
 
+    TELEGRAM_BOT_TOKEN: z.string().optional(),
+
     DATABASE_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -49,6 +51,7 @@ export const env = createEnv({
 
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url().optional(),
+    NEXT_PUBLIC_TELEGRAM_BOT_USERNAME: z.string().optional(),
   },
 
   runtimeEnv: {
@@ -63,6 +66,8 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_TELEGRAM_BOT_USERNAME: process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME,
+    TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
     ENABLE_EMAIL_AUTH: process.env.ENABLE_EMAIL_AUTH,
     EMAIL_SERVER_HOST: process.env.EMAIL_SERVER_HOST,
     EMAIL_SERVER_PORT: process.env.EMAIL_SERVER_PORT,
